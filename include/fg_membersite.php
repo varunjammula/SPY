@@ -364,7 +364,7 @@ class FGMembersite
         }          
         $username = $this->SanitizeForSQL($username);
         $pwdmd5 = md5($password);
-        $qry = "Select name, email from $this->tablename where username='$username' and password='$pwdmd5'";
+        $qry = "Select * from $this->tablename where username='$username' and password='$pwdmd5'";
         
         $result = mysql_query($qry,$this->connection);
         
