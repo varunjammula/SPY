@@ -95,6 +95,15 @@ class FGMembersite
         return true;
     }
 
+
+    function Passcheck()
+    {
+        if($_POST['password']==$_POST['password_confirm'])
+            return true;
+        else
+            return false;
+    }
+
     function ConfirmUser()
     {
         if(empty($_GET['code'])||strlen($_GET['code'])<=10)
@@ -586,12 +595,12 @@ class FGMembersite
         }
         
         $validator = new FormValidator();
-        $validator->addValidation("name","req","Please fill in Name");
-        $validator->addValidation("email","email","The input for Email should be a valid email value");
-        $validator->addValidation("email","req","Please fill in Email");
+        //$validator->addValidation("name","req","Please fill in Name");
+        //$validator->addValidation("email","email","The input for Email should be a valid email value");
+        //$validator->addValidation("email","req","Please fill in Email");
         $validator->addValidation("username","req","Please fill in UserName");
         $validator->addValidation("password","req","Please fill in Password");
-
+        $validator->addValidation("password_confirm","req","Confirm Password cannot be empty");
         
         if(!$validator->ValidateForm())
         {
@@ -602,8 +611,16 @@ class FGMembersite
                 $error .= $inpname.':'.$inp_err."\n";
             }
             $this->HandleError($error);
+            
             return false;
-        }        
+        } 
+
+        if(!$this->Passcheck())
+        {
+            $this->HandleError("Password and Confirm Password mismatch");
+            return false;
+        }
+
         return true;
     }
     
@@ -730,8 +747,6 @@ class FGMembersite
     {
         $qry = "Create Table $this->tablename (".
                 "id_user INT NOT NULL AUTO_INCREMENT ,".
-                "name VARCHAR( 128 ) NOT NULL ,".
-                "email VARCHAR( 64 ) NOT NULL ,".
                 "username VARCHAR( 16 ) NOT NULL ,".
                 "password VARCHAR( 32 ) NOT NULL ,".
                 "PRIMARY KEY ( id_user )".
@@ -753,15 +768,11 @@ class FGMembersite
         $formvars['confirmcode'] = $confirmcode;
         
         $insert_query = 'insert into '.$this->tablename.'(
-                name,
-                email,
                 username,
                 password
                 )
                 values
                 (
-                "' . $this->SanitizeForSQL($formvars['name']) . '",
-                "' . $this->SanitizeForSQL($formvars['email']) . '",
                 "' . $this->SanitizeForSQL($formvars['username']) . '",
                 "' . md5($formvars['password']) . '"
                 )';      

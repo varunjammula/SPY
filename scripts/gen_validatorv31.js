@@ -119,6 +119,7 @@ function add_validation(itemname,descriptor,errstr)
    itemobj.validationset.add(descriptor,errstr,condition);
     itemobj.validatorobj=this;
 }
+
 function validator_enable_OPED()
 {
     document.error_disp_handler.EnableOnPageDisplay(false);
@@ -475,6 +476,8 @@ function TestMaxLen(objValue,strMaxLen,strError)
     }//if 
 return ret;
 }
+
+
 function TestMinLen(objValue,strMinLen,strError)
 {
  var ret = true;
@@ -489,6 +492,7 @@ function TestMinLen(objValue,strMinLen,strError)
     }//if 
 return ret;
 }
+
 function TestInputType(objValue,strRegExp,strError,strDefaultError)
 {
    var ret = true;
@@ -505,6 +509,7 @@ function TestInputType(objValue,strRegExp,strError,strDefaultError)
     }//if 
  return ret;
 }
+
 function TestEmail(objValue,strError)
 {
 var ret = true;
@@ -519,6 +524,7 @@ var ret = true;
      }//if 
 return ret;
 }
+
 function TestLessThan(objValue,strLessThan,strError)
 {
 var ret = true;
@@ -539,6 +545,7 @@ var ret = true;
       }//if   
 return ret;          
 }
+
 function TestGreaterThan(objValue,strGreaterThan,strError)
 {
 var ret = true;
@@ -559,6 +566,7 @@ var ret = true;
       }//if  
 return ret;           
 }
+
 function TestRegExp(objValue,strRegExp,strError)
 {
 var ret = true;
@@ -574,6 +582,7 @@ var ret = true;
     }//if 
 return ret;
 }
+
 function TestDontSelect(objValue,dont_sel_value,strError)
 {
 var ret = true;
@@ -594,6 +603,7 @@ var ret = true;
       } 
 return ret;
 }
+
 function TestSelectOneRadio(objValue,strError)
 {
    var objradio = objValue.form.elements[objValue.name];
@@ -774,6 +784,7 @@ function validateInput(strValidateStr,objValue,strError)
     }//switch 
    return ret;
 }
+
 function VWZ_IsListItemSelected(listname,value)
 {
  for(var i=0;i < listname.options.length;i++)
@@ -786,6 +797,7 @@ function VWZ_IsListItemSelected(listname,value)
  }
  return false;
 }
+
 function VWZ_IsChecked(objcheck,value)
 {
  if(objcheck.length)
@@ -808,6 +820,8 @@ function VWZ_IsChecked(objcheck,value)
  }
  return false;
 }
+
+
 /*
    Copyright (C) 2003-2008 JavaScript-Coder.com . All rights reserved.
 */
