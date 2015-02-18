@@ -17,6 +17,27 @@ $fgmembersite->LogOut();
 <p>
 <a href='../login/'>Login Again</a>
 </p>
+<?
+unset($_SESSION["name_of_user"]);
+//unset($_SESSION["email_of_user"]);
+//print_r($_SESSION);
+/*foreach ($_COOKIE as $c_id => $c_value)
+{
+	//echo $c_id."-->".$c_value;
+    setcookie($c_id, " ", time() - 3600);
+}*/
 
+if (isset($_SERVER['HTTP_COOKIE'])) {
+    $cookies = explode(';', $_SERVER['HTTP_COOKIE']);
+    foreach($cookies as $cookie) {
+        $parts = explode('=', $cookie);
+        $name = trim($parts[0]);
+        setcookie($name, '', time()-10000);
+        setcookie($name, '', time()-10000, '/');
+    }
+}
+print_r($_COOKIE);
+
+?>
 </body>
 </html>

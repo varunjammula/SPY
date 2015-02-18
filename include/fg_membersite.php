@@ -88,13 +88,173 @@ class FGMembersite
             return false;
         }
         
-        
-
         //$this->SendAdminIntimationEmail($formvars);
         
         return true;
     }
 
+    function ListDisplay()
+    {
+        $this->connection = mysql_connect($this->db_host,$this->username,$this->pwd);
+        
+        if(!$this->connection)
+        {  
+            echo "Database Login failed! Please make sure that the DB login credentials provided are correct";
+            //return false;
+        }
+
+        if(!mysql_select_db('sva', $this->connection))
+        {
+            echo "Failed to select database: 'SVA' Please make sure that the database name provided is correct";
+            return false;
+        }
+
+        $mode=$_COOKIE['mode'];
+        if(strcmp($mode,"private")==0)
+            $table_view="private_posts";
+        else
+            $table_view="public_posts";
+        $qry = "Select * from ".$table_view;
+        
+        $result = mysql_query($qry,$this->connection);
+        
+        if(!$result)
+        {
+            echo "Error logging in. The username or password does not match";
+        }
+
+
+        if(!empty(mysql_fetch_array($result)))
+        {
+            echo "<table border=1><tr><th>Title</th><th>Message</th><th>Author</th></tr>";
+
+             while ($row = mysql_fetch_array($result))  
+                {
+
+                    echo "<tr><td>".$row["title"]."</td><td>".$row["message"]."</td><td>".$row["username"]."</td><tr>" ;
+                }
+        
+            echo "</table>";    
+        }
+        elseif(empty(mysql_fetch_array($result)))
+        {
+            echo "<h3>No posts yet !</h3>";
+        }
+
+        mysql_close($this->connection);
+    }
+
+    function MessageCreate()
+    {
+        if(!isset($_POST['submitted']))
+        {
+           return false;
+        }
+        
+        $formvars = array();
+        
+        if(!$this->ValidateCreateSubmission())
+        {
+            return false;
+        }
+        
+        $this->CollectCreateSubmission($formvars);
+        
+        if(!$this->SaveTobase($formvars))
+        {
+            return false;
+        }
+        
+        //$this->SendAdminIntimationEmail($formvars);
+        
+        return true;
+    }
+
+
+    function SaveTobase(&$formvars)
+    {
+        if(!$this->DBLogin())
+        {
+            $this->HandleError("Database login failed!");
+            return false;
+        }
+        if(!$this->Ensuretable())
+        {
+            return false;
+        }
+        
+        if(!$this->InsertIntoMB($formvars))
+        {
+            $this->HandleError("Inserting to Database failed!");
+            return false;
+        }
+        return true;
+    }
+
+
+    function InsertIntoMB(&$formvars)
+    {
+    
+        $insert_query = 'insert into public_posts(
+                username,
+                title,
+                message
+                )
+                values
+                (
+                "' . $this->UserFullName(). '",
+                "' . $formvars['title'] . '",
+                "' . $formvars['message'] . '"
+                )';      
+        if(!mysql_query( $insert_query ,$this->connection))
+        {
+            $this->HandleDBError("Error inserting data to the table\nquery:$insert_query");
+            return false;
+        }        
+        return true;   
+
+    }
+
+    function CollectCreateSubmission(&$formvars)
+    {
+        //$formvars['name'] = $this->Sanitize($_POST['name']);
+        //$formvars['email'] = $this->Sanitize($_POST['email']);
+        $formvars['title'] = $this->Sanitize($_POST['title']);
+        $formvars['message'] = $this->Sanitize($_POST['message']);
+    }
+
+    function ValidateCreateSubmission()
+    {
+        //This is a hidden input field. Humans won't fill this field.
+        if(!empty($_POST[$this->GetSpamTrapInputName()]) )
+        {
+            //The proper error is not given intentionally
+            $this->HandleError("Automated submission prevention: case 2 failed");
+            return false;
+        }
+        
+        $validator1 = new FormValidator();
+        //$validator->addValidation("name","req","Please fill in Name");
+        //$validator->addValidation("email","email","The input for Email should be a valid email value");
+        //$validator->addValidation("email","req","Please fill in Email");
+        $validator1->addValidation("title","req","Please fill in Title");
+        $validator1->addValidation("message","req","Please fill in Message");
+        
+        
+        if(!$validator1->ValidateForm())
+        {
+            $error1='';
+            $error_hash1 = $validator1->GetErrors();
+            foreach($error_hash1 as $inpname => $inp_err)
+            {
+                $error1 .= $inpname.':'.$inp_err."\n";
+            }
+            $this->HandleError($error1);
+            $this->HandleError("Please fill all the details");
+            return false;
+        } 
+        return true;
+    }
 
     function Passcheck()
     {
@@ -184,6 +344,18 @@ class FGMembersite
         $_SESSION[$sessionvar]=NULL;
         
         unset($_SESSION[$sessionvar]);
+
+        if (isset($_SERVER['HTTP_COOKIE'])) 
+        {
+            $cookies = explode(';', $_SERVER['HTTP_COOKIE']);
+            foreach($cookies as $cookie) 
+            {
+                $parts = explode('=', $cookie);
+                $name = trim($parts[0]);
+                setcookie($name, '', time()-10000);
+                setcookie($name, '', time()-10000, '/');
+            }
+        }
     }
     
     function EmailResetPasswordLink()
@@ -377,8 +549,8 @@ class FGMembersite
         $row = mysql_fetch_assoc($result);
         
         
-        $_SESSION['name_of_user']  = $row['name'];
-        $_SESSION['email_of_user'] = $row['email'];
+        $_SESSION['name_of_user']  = $row['username'];
+        //$_SESSION['email_of_user'] = $row['email'];
         
         return true;
     }
@@ -626,8 +798,8 @@ class FGMembersite
     
     function CollectRegistrationSubmission(&$formvars)
     {
-        $formvars['name'] = $this->Sanitize($_POST['name']);
-        $formvars['email'] = $this->Sanitize($_POST['email']);
+        //$formvars['name'] = $this->Sanitize($_POST['name']);
+        //$formvars['email'] = $this->Sanitize($_POST['email']);
         $formvars['username'] = $this->Sanitize($_POST['username']);
         $formvars['password'] = $this->Sanitize($_POST['password']);
     }
@@ -636,7 +808,7 @@ class FGMembersite
     function GetAbsoluteURLFolder()
     {
         $scriptFolder = (isset($_SERVER['HTTPS']) && ($_SERVER['HTTPS'] == 'on')) ? 'https://' : 'http://';
-        $scriptFolder .= $_SERVER['HTTP_HOST'] . dirname($_SERVER['REQUEST_URI']);
+        $scriptFolder .= ['HTTP_HOST'] . dirname($_SERVER['REQUEST_URI']);
         return $scriptFolder;
     }
     
@@ -677,11 +849,6 @@ class FGMembersite
         }
         if(!$this->Ensuretable())
         {
-            return false;
-        }
-        if(!$this->IsFieldUnique($formvars,'email'))
-        {
-            $this->HandleError("This email is already registered");
             return false;
         }
         
@@ -735,8 +902,10 @@ class FGMembersite
     
     function Ensuretable()
     {
-        $result = mysql_query("SHOW COLUMNS FROM $this->tablename");   
-        if(!$result || mysql_num_rows($result) <= 0)
+        $result = mysql_query("SHOW COLUMNS FROM $this->tablename"); 
+        $result1 = mysql_query("SHOW COLUMNS FROM public_posts");
+        $result2 = mysql_query("SHOW COLUMNS FROM private_posts");  
+        if(!$result || mysql_num_rows($result) <= 0||!$result1 || mysql_num_rows($result1) <= 0||!$result2 || mysql_num_rows($result2) <= 0)
         {
             return $this->CreateTable();
         }
@@ -757,6 +926,32 @@ class FGMembersite
             $this->HandleDBError("Error creating the table \nquery was\n $qry");
             return false;
         }
+
+        $qry1 = "Create Table public_posts (".
+                "username VARCHAR( 16 ) NOT NULL ,".
+                "title VARCHAR( 100 ) NOT NULL ,".
+                "message VARCHAR( 100 ) NOT NULL ".
+                ")";
+                
+        if(!mysql_query($qry1,$this->connection))
+        {
+            $this->HandleDBError("Error creating the table \nquery1 was\n $qry1");
+            return false;
+        }
+
+
+        $qry2 = "Create Table private_posts (".
+                "username VARCHAR( 16 ) NOT NULL ,".
+                "title VARCHAR( 100 ) NOT NULL ,".
+                "message VARCHAR( 100 ) NOT NULL ".
+                ")";
+
+        if(!mysql_query($qry2,$this->connection))
+        {
+            $this->HandleDBError("Error creating the table \nquery2 was\n $qry2");
+            return false;
+        }
+
         return true;
     }
     
@@ -783,6 +978,7 @@ class FGMembersite
         }        
         return true;
     }
+
     function MakeConfirmationMd5($email)
     {
         $randno1 = rand();

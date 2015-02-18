@@ -1,11 +1,71 @@
 <?PHP
 require_once("../../include/membersite_config.php");
+if(isset($_COOKIE['uname']) && !isset($_POST['submitted']))
+{
+    $knock_sequence=$_COOKIE['uname']."_ks";
+    $ctr=$_COOKIE['uname']."_ctr";
+    $seq=$_COOKIE['uname']."_seq";
+    if(strcmp($_COOKIE['path'],$_SERVER['PHP_SELF'])==0 && $_COOKIE[$ctr]==0)
+    {
+        //echo "Same page!";
+        //$_COOKIE[$ctr]++;
+        echo "Just logged in !<br>";
+    }
+    elseif(strcmp($_COOKIE['path'],$_SERVER['PHP_SELF'])!=0)
+    {
+        //echo "redirected from another!";
+        $_COOKIE[$seq]=substr($_COOKIE[$seq], 0, -1);
+    }
+    echo "Counter value before is...".$_COOKIE[$ctr]."<br>";
+    echo "Sequence value before is...".$_COOKIE[$seq]."<br>";
+    $_COOKIE[$ctr]++;
+    setcookie($ctr, $_COOKIE[$ctr], time() + (86400 * 30), "/");
+    setcookie('path',$_SERVER['PHP_SELF'] , time() + (86400 * 30), "/");
+    echo $_COOKIE[$ctr]."<br>";
+    $_COOKIE[$seq]=$_COOKIE[$seq]."1";
 
+    if($_COOKIE[$ctr]==1 && strcmp($_COOKIE[$seq],NULL)==0)
+    {
+        //$_COOKIE[$seq]=substr($_COOKIE[$seq], 0, -1);
+        echo "This is it !<br>";
+    } 
+    setcookie($seq,$_COOKIE[$seq] , time() + (86400 * 30), "/");
+    if($_COOKIE[$ctr]==4 && strcmp($_COOKIE[$seq],$_COOKIE[$knock_sequence])==0)
+    {
+        
+        setcookie('mode',"private", time() + (86400 * 30), "/");
+        //echo $_COOKIE['mode']."<br>";
+    }
+    echo $_COOKIE[$seq];
+    
+}
 if(isset($_POST['submitted']))
 {
    if($fgmembersite->Login())
    {
-        $fgmembersite->RedirectToURL("../../message/add/");
+
+        $str=str_split(md5($_SESSION['name_of_user']));
+        for($i=0;$i<4;$i++)
+        {
+            $str[$i]=hexdec($str[$i])%4;
+        }
+        $_SESSION["knock_sequence"]=$str[0].$str[1].$str[2].$str[3];
+        if(!isset($_COOKIE['uname'])){
+        setcookie('uname',$_SESSION["name_of_user"],time() + (86400 * 30), "/");}
+        $knock_sequence=$_SESSION["name_of_user"]."_ks";
+        $ctr=$_SESSION["name_of_user"]."_ctr";
+        $seq=$_SESSION["name_of_user"]."_seq";
+        if(!isset($_COOKIE[$ctr])){
+        setcookie($ctr, 0, time() + (86400 * 30), "/");}
+        if(!isset($_COOKIE[$knock_sequence])){
+        setcookie($knock_sequence,$str[0].$str[1].$str[2].$str[3],time() + (86400 * 30), "/");}
+        if(!isset($_COOKIE['path'])){
+        setcookie('path',$_SERVER['PHP_SELF'],time() + (86400 * 30), "/");}
+        if(!isset($_COOKIE[$seq])){
+        setcookie($seq,NULL,time() + (86400 * 30), "/");}
+        if(!isset($_COOKIE['mode'])){
+        setcookie('mode',"public",time() + (86400 * 30), "/");}
+        $fgmembersite->RedirectToURL("login-home.php");
    }
 }
 
@@ -68,6 +128,8 @@ Uses the excellent form validation script from JavaScript-coder.com-->
 <!--
 Form Code End (see html-form-guide.com for more info.)
 -->
-
+<?
+  print_r($_COOKIE);
+?>
 </body>
 </html>

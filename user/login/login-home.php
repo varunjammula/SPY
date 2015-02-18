@@ -3,7 +3,7 @@ require_once("../../include/membersite_config.php");
 
 if(!$fgmembersite->CheckLogin())
 {
-    $fgmembersite->RedirectToURL("../../user/login/");
+    $fgmembersite->RedirectToURL("index.php");
     exit;
 }
 
@@ -13,18 +13,22 @@ if(!$fgmembersite->CheckLogin())
 <head>
       <meta http-equiv='Content-Type' content='text/html; charset=utf-8'/>
       <title>Home page</title>
-      <link rel="STYLESHEET" type="text/css" href="../../style/fg_membersite.css">
+      <link rel="STYLESHEET" type="text/css" href="style/fg_membersite.css">
 </head>
 <body>
 <div id='fg_membersite_content'>
 <h2>Home Page</h2>
 Welcome back <?= $fgmembersite->UserFullName(); ?>!
 
-<p><a href='change-pwd.php'>Change password</a></p>
+<p><a href='../../message/add'>Add post</a></p>
+<p><a href='../../message/list'>View posts</a></p>
 
-<p><a href='../../access-controlled.php'>A sample 'members-only' page</a></p>
 <br><br><br>
 <p><a href='../../user/logout/'>Logout</a></p>
+</script>
+<?
+    print_r($_COOKIE);
+?>
 </div>
 </body>
 </html>
