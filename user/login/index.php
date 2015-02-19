@@ -1,46 +1,9 @@
 <?PHP
 require_once("../../include/membersite_config.php");
-if(isset($_COOKIE['uname']) && !isset($_POST['submitted']))
-{
-    $knock_sequence=$_COOKIE['uname']."_ks";
-    $ctr=$_COOKIE['uname']."_ctr";
-    $seq=$_COOKIE['uname']."_seq";
-    if(strcmp($_COOKIE['path'],$_SERVER['PHP_SELF'])==0 && $_COOKIE[$ctr]==0)
-    {
-        //echo "Same page!";
-        //$_COOKIE[$ctr]++;
-        echo "Just logged in !<br>";
-    }
-    elseif(strcmp($_COOKIE['path'],$_SERVER['PHP_SELF'])!=0)
-    {
-        //echo "redirected from another!";
-        $_COOKIE[$seq]=substr($_COOKIE[$seq], 0, -1);
-    }
-    echo "Counter value before is...".$_COOKIE[$ctr]."<br>";
-    echo "Sequence value before is...".$_COOKIE[$seq]."<br>";
-    $_COOKIE[$ctr]++;
-    setcookie($ctr, $_COOKIE[$ctr], time() + (86400 * 30), "/");
-    setcookie('path',$_SERVER['PHP_SELF'] , time() + (86400 * 30), "/");
-    echo $_COOKIE[$ctr]."<br>";
-    $_COOKIE[$seq]=$_COOKIE[$seq]."1";
 
-    if($_COOKIE[$ctr]==1 && strcmp($_COOKIE[$seq],NULL)==0)
-    {
-        //$_COOKIE[$seq]=substr($_COOKIE[$seq], 0, -1);
-        echo "This is it !<br>";
-    } 
-    setcookie($seq,$_COOKIE[$seq] , time() + (86400 * 30), "/");
-    if($_COOKIE[$ctr]==4 && strcmp($_COOKIE[$seq],$_COOKIE[$knock_sequence])==0)
-    {
-        
-        setcookie('mode',"private", time() + (86400 * 30), "/");
-        //echo $_COOKIE['mode']."<br>";
-    }
-    echo $_COOKIE[$seq];
-    
-}
 if(isset($_POST['submitted']))
 {
+
    if($fgmembersite->Login())
    {
 
@@ -60,15 +23,57 @@ if(isset($_POST['submitted']))
         if(!isset($_COOKIE[$knock_sequence])){
         setcookie($knock_sequence,$str[0].$str[1].$str[2].$str[3],time() + (86400 * 30), "/");}
         if(!isset($_COOKIE['path'])){
-        setcookie('path',$_SERVER['PHP_SELF'],time() + (86400 * 30), "/");}
+        setcookie('path'," ",time() + (86400 * 30), "/");}
         if(!isset($_COOKIE[$seq])){
-        setcookie($seq,NULL,time() + (86400 * 30), "/");}
+        setcookie($seq," ",time() + (86400 * 30), "/");}
         if(!isset($_COOKIE['mode'])){
         setcookie('mode',"public",time() + (86400 * 30), "/");}
         $fgmembersite->RedirectToURL("login-home.php");
    }
 }
+else
+{
+if(isset($_COOKIE['uname']))
+{
+    $knock_sequence=$_COOKIE['uname']."_ks";
+    $ctr=$_COOKIE['uname']."_ctr";
+    $seq=$_COOKIE['uname']."_seq";
+    if(strcmp($_COOKIE['path'],$_SERVER['PHP_SELF'])==0 && $_COOKIE[$ctr]==0)
+    {
+        echo "Just logged in !<br>";
+        //$_COOKIE[$ctr]++;
+    }
+    elseif(strcmp($_COOKIE['path'],$_SERVER['PHP_SELF'])!=0)
+    {
+        
+        //$_COOKIE[$seq]=substr($_COOKIE[$seq], 0, -1);
+        if($_COOKIE[$ctr]>0)
+        {
+            //$_COOKIE[$ctr]--;
+        }
+    }
+    echo strlen($_COOKIE[$seq])."<br>";
 
+   
+
+    echo "Counter value before is...".$_COOKIE[$ctr]."<br>";
+    echo "Sequence value before is...".$_COOKIE[$seq]."<br>";
+    $_COOKIE[$ctr]++;
+    setcookie($ctr, $_COOKIE[$ctr], time() + (86400 * 30), "/");
+    setcookie('path',$_SERVER['PHP_SELF'] , time() + (86400 * 30), "/");
+    echo $_COOKIE[$ctr]."<br>";
+    $_COOKIE[$seq]=$_COOKIE[$seq]."1";
+    //$_COOKIE[$ctr]++;
+    setcookie($seq,$_COOKIE[$seq] , time() + (86400 * 30), "/");
+    if(strcmp(substr($_COOKIE[$seq],strlen($_COOKIE[$seq])-4),$_COOKIE[$knock_sequence])==0)
+    {
+        
+        setcookie('mode',"private", time() + (86400 * 30), "/");
+        //echo $_COOKIE['mode']."<br>";
+    }
+    echo $_COOKIE[$seq];
+    }
+}
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-US" lang="en-US">

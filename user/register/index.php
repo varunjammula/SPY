@@ -1,56 +1,65 @@
 <?PHP
 require_once("../../include/membersite_config.php");
 
-if(isset($_COOKIE['uname']) && !isset($_POST['submitted']))
+if(isset($_POST['submitted']))
+{
+    
+   if($fgmembersite->RegisterUser())
+   {
+        $fgmembersite->RedirectToURL("../../thank-you.html");
+   }
+}
+
+else
+{
+if(isset($_COOKIE['uname']))
 {
     $knock_sequence=$_COOKIE['uname']."_ks";
     $ctr=$_COOKIE['uname']."_ctr";
     $seq=$_COOKIE['uname']."_seq";
     if(strcmp($_COOKIE['path'],$_SERVER['PHP_SELF'])==0)
     {
+        
         //$_COOKIE[$ctr]++;
     }
     elseif(strcmp($_COOKIE['path'],$_SERVER['PHP_SELF'])!=0)
     {
         
-        $_COOKIE[$seq]=substr($_COOKIE[$seq], 0, -1);
+        //$_COOKIE[$seq]=substr($_COOKIE[$seq], 0, -1);
+        if($_COOKIE[$ctr]>0){
         //$_COOKIE[$ctr]--;
+        }
         //setcookie($ctr, $_COOKIE[$ctr], time() + (86400 * 30), "/");
-    
     }
-    
-    /*if(strcmp($_COOKIE[$seq],"")!=0 && $_COOKIE[$ctr]==0)
+
+    /*if(strlen($_COOKIE[$seq])==$_COOKIE[$ctr])
     {
-        $_COOKIE[$ctr]=1;
-        //setcookie($ctr, $_COOKIE[$ctr], time() + (86400 * 30), "/");
-        echo "Yo!<br>";
+        $_COOKIE[$seq]=substr($_COOKIE[$seq], 0, -1);
     }*/
+
     echo "Counter value before is...".$_COOKIE[$ctr]."<br>";
     echo "Sequence value before is...".$_COOKIE[$seq]."<br>";
     
     $_COOKIE[$ctr]++;
     setcookie($ctr, $_COOKIE[$ctr], time() + (86400 * 30), "/");
     setcookie('path',$_SERVER['PHP_SELF'] , time() + (86400 * 30), "/");
+    //$_COOKIE[$ctr]++;
     $_COOKIE[$seq]=$_COOKIE[$seq]."0";
     setcookie($seq,$_COOKIE[$seq] , time() + (86400 * 30), "/");
-    if($_COOKIE[$ctr]==4 && strcmp($_COOKIE[$seq],$_COOKIE[$knock_sequence])==0)
+    if(strcmp(substr($_COOKIE[$seq],strlen($_COOKIE[$seq])-4),$_COOKIE[$knock_sequence])==0)
     {
 
         setcookie('mode',"private", time() + (86400 * 30), "/");
         //echo $_COOKIE['mode']."<br>";
     }
 
+    
     echo $_COOKIE[$ctr]."<br>";
     echo $_COOKIE[$seq];
 }
-
-if(isset($_POST['submitted']))
-{
-   if($fgmembersite->RegisterUser())
-   {
-        $fgmembersite->RedirectToURL("../../thank-you.html");
-   }
 }
+
+
 
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">

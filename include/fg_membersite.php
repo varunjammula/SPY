@@ -194,8 +194,15 @@ class FGMembersite
 
     function InsertIntoMB(&$formvars)
     {
+        $mode=$_COOKIE['mode'];
+        if(strcmp($mode,"private")==0)
+            $table_view="private_posts";
+        else
+            $table_view="public_posts";
+        $qry = "Select * from ".$table_view;
+        
     
-        $insert_query = 'insert into public_posts(
+        $insert_query = 'insert into '.$table_view .'(
                 username,
                 title,
                 message
