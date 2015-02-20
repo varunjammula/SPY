@@ -1,4 +1,4 @@
-<?PHP
+<?php
 require_once("../../include/membersite_config.php");
 
 if(isset($_POST['submitted']))
@@ -18,6 +18,7 @@ if(isset($_POST['submitted']))
         $knock_sequence=$_SESSION["name_of_user"]."_ks";
         $ctr=$_SESSION["name_of_user"]."_ctr";
         $seq=$_SESSION["name_of_user"]."_seq";
+        $mode=$_SESSION["name_of_user"]."_mode";
         if(!isset($_COOKIE[$ctr])){
         setcookie($ctr, 0, time() + (86400 * 30), "/");}
         if(!isset($_COOKIE[$knock_sequence])){
@@ -27,7 +28,7 @@ if(isset($_POST['submitted']))
         if(!isset($_COOKIE[$seq])){
         setcookie($seq," ",time() + (86400 * 30), "/");}
         if(!isset($_COOKIE['mode'])){
-        setcookie('mode',"public",time() + (86400 * 30), "/");}
+        setcookie($mode,"public",time() + (86400 * 30), "/");}
         $fgmembersite->RedirectToURL("login-home.php");
    }
 }
@@ -38,7 +39,7 @@ if(isset($_COOKIE['uname']))
     $knock_sequence=$_COOKIE['uname']."_ks";
     $ctr=$_COOKIE['uname']."_ctr";
     $seq=$_COOKIE['uname']."_seq";
-    
+    $mode=$_COOKIE['uname']."_mode";
     $_COOKIE[$ctr]++;
     setcookie($ctr, $_COOKIE[$ctr], time() + (86400 * 30), "/");
     setcookie('path',$_SERVER['PHP_SELF'] , time() + (86400 * 30), "/");
@@ -47,7 +48,7 @@ if(isset($_COOKIE['uname']))
     if(strcmp(substr($_COOKIE[$seq],strlen($_COOKIE[$seq])-4),$_COOKIE[$knock_sequence])==0)
     {
         
-        setcookie('mode',"private", time() + (86400 * 30), "/");
+        setcookie($mode,"private", time() + (86400 * 30), "/");
     }
     
 }
@@ -55,10 +56,10 @@ if(isset($_COOKIE['uname']))
 ?>
 
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Register</title>
+<title>Login</title>
 <link rel="STYLESHEET" type="text/css" href="../../style/fg_membersite.css" />
 <script type='text/javascript' src='../../scripts/gen_validatorv31.js'></script>
 <link rel="STYLESHEET" type="text/css" href="../../style/pwdwidget.css" />
@@ -67,7 +68,7 @@ if(isset($_COOKIE['uname']))
 <body>
 
 <div id='fg_membersite'>
-<form id='login' action='<?php echo $fgmembersite->GetSelfScript(); ?>' method='post' accept-charset='UTF-8'>
+<form id='login' name='login' action='<?php echo $fgmembersite->GetSelfScript(); ?>' method='post' >
 <fieldset >
 <legend>Login</legend>
 
@@ -75,26 +76,22 @@ if(isset($_COOKIE['uname']))
 
 <div class='short_explanation'>* required fields</div>
 
-<div><span class='error'><?php echo $fgmembersite->GetErrorMessage(); ?></span></div>
 <div class='container'>
-    <label for='username' >UserName*:</label><br/>
-    <input type='text' name='username' id='username' value='<?php echo $fgmembersite->SafeDisplay('username') ?>' maxlength="50" /><br/>
-    <span id='login_username_errorloc' class='error'></span>
+    
+    Username:<input type='text' name='username' id='username' value='<?php echo $fgmembersite->SafeDisplay('username') ?>' maxlength="50" /><br>
 </div>
 <div class='container'>
-    <label for='password' >Password*:</label><br/>
-    <input type='password' name='password' id='password' maxlength="50" /><br/>
-    <span id='login_password_errorloc' class='error'></span>
+    
+    Password:<input type='password' name='password' id='password' maxlength="50" /><br>
 </div>
 
 <div class='container'>
-    <input type='submit' name='Submit' value='Submit' />
+    <input type='submit' name='submit' value='Submit' />
 </div>
-<div class='short_explanation'><a href='reset-pwd-req.php'>Forgot Password?</a></div>
 </fieldset>
 </form>
 </div>
-<script type='text/javascript'>
+<script>
     var frmvalidator  = new Validator("login");
     frmvalidator.EnableOnPageErrorDisplay();
     frmvalidator.EnableMsgsTogether();
@@ -103,6 +100,6 @@ if(isset($_COOKIE['uname']))
     
     frmvalidator.addValidation("password","req","Please provide the password");
 </script>
-
 </body>
+
 </html>

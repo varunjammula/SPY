@@ -1,4 +1,4 @@
-<?PHP
+<?php
 /*
     Registration/Login script from HTML Form Guide
     V1.0
@@ -108,9 +108,10 @@ class FGMembersite
             echo "Failed to select database: 'SVA' Please make sure that the database name provided is correct";
             return false;
         }
-
-        $mode=$_COOKIE['mode'];
-        if(strcmp($mode,"private")==0)
+        
+        $mode=$_COOKIE['uname']."_mode";
+        $model=$_COOKIE[$mode];
+        if(strcmp($model,"private")==0)
             $table_view="private_posts";
         else
             $table_view="public_posts";
@@ -126,15 +127,21 @@ class FGMembersite
 
         if(!empty(mysql_fetch_array($result)))
         {
-            echo "<table border=1><tr><th>Title</th><th>Message</th><th>Author</th></tr>";
-
+               
              while ($row = mysql_fetch_array($result))  
                 {
-
-                    echo "<tr><td>".$row["title"]."</td><td>".$row["message"]."</td><td>".$row["username"]."</td><tr>" ;
+                    $row["title"] = trim($row["title"]);
+                    $row["title"] = stripslashes($row["title"]);
+                    $row["title"] = htmlspecialchars($row["title"]);
+                    
+                    $row["message"] = trim($row["message"]);
+                    $row["message"] = stripslashes($row["message"]);
+                    $row["message"] = htmlspecialchars($row["message"]);
+                    
+                    
+                    echo "<div class=\"message\">".$row["title"]." Message: ".$row["message"]."</div>";
                 }
-        
-            echo "</table>";    
+         
         }
         elseif(empty(mysql_fetch_array($result)))
         {
@@ -194,8 +201,9 @@ class FGMembersite
 
     function InsertIntoMB(&$formvars)
     {
-        $mode=$_COOKIE['mode'];
-        if(strcmp($mode,"private")==0)
+        $mode=$_COOKIE['uname']."_mode";
+        $model=$_COOKIE[$mode];
+        if(strcmp($model,"private")==0)
             $table_view="private_posts";
         else
             $table_view="public_posts";
@@ -209,9 +217,9 @@ class FGMembersite
                 )
                 values
                 (
-                "' . $this->UserFullName(). '",
-                "' . $formvars['title'] . '",
-                "' . $formvars['message'] . '"
+                "' . mysql_real_escape_string($this->UserFullName()). '",
+                "' . mysql_real_escape_string($formvars['title']) . '",
+                "' . mysql_real_escape_string($formvars['message']) . '"
                 )';      
         if(!mysql_query( $insert_query ,$this->connection))
         {

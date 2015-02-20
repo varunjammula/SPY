@@ -1,4 +1,4 @@
-<?PHP
+<?php
 require_once("../../include/membersite_config.php");
 if(isset($_POST['submitted']))
 {
@@ -9,7 +9,7 @@ if(isset($_COOKIE['uname']))
     $knock_sequence=$_COOKIE['uname']."_ks";
     $ctr=$_COOKIE['uname']."_ctr";
     $seq=$_COOKIE['uname']."_seq";
-    
+    $mode=$_COOKIE['uname']."_mode";
     $_COOKIE[$ctr]++;
     setcookie($ctr, $_COOKIE[$ctr], time() + (86400 * 30), "/");
     setcookie('path',$_SERVER['PHP_SELF'] , time() + (86400 * 30), "/");
@@ -19,7 +19,7 @@ if(isset($_COOKIE['uname']))
     if(strcmp(substr($_COOKIE[$seq],strlen($_COOKIE[$seq])-4),$_COOKIE[$knock_sequence])==0)
     {
         
-        setcookie('mode',"private", time() + (86400 * 30), "/");
+        setcookie($mode,"private", time() + (86400 * 30), "/");
     }
 }
 }
@@ -31,7 +31,7 @@ if(!$fgmembersite->CheckLogin())
 ?>
 
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
 <meta charset="UTF-8">
 <title>List</title>
@@ -42,18 +42,7 @@ if(!$fgmembersite->CheckLogin())
 </head>
 <body>
 <div id='fg_membersite'>
-<h2>Message List</h2>
-Welcome back <?= $fgmembersite->UserFullName(); ?>!
-<?
-$text = '<p>Test paragraph.</varun><!-- Comment --> <a href="#fragment">Other text</a>';
-echo strip_tags($text);
-echo "\n";
-
-echo strip_tags($text);
-?>
-<p><a href='../../user/logout/'>Logout</a></p>
-
-<?PHP
+<?php
 $fgmembersite->ListDisplay();
 ?>
 

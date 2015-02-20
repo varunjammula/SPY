@@ -1,6 +1,5 @@
 <?PHP
 require_once("../../include/membersite_config.php");
-
 $fgmembersite->LogOut();
 ?>
 
@@ -28,8 +27,8 @@ if (isset($_SERVER['HTTP_COOKIE'])) {
     foreach($cookies as $cookie) {
         $parts = explode('=', $cookie);
         $name = trim($parts[0]);
-        setcookie($name, '', time()-10000);
-        setcookie($name, '', time()-10000, '/');
+        setcookie($name, NULL, time()-1000);
+        setcookie($name, NULL, time()-1000, '/');
     }
 }
 ?>
