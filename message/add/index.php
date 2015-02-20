@@ -10,31 +10,11 @@ if(isset($_COOKIE['uname']))
     $knock_sequence=$_COOKIE['uname']."_ks";
     $ctr=$_COOKIE['uname']."_ctr";
     $seq=$_COOKIE['uname']."_seq";
-    if(strcmp($_COOKIE['path'],$_SERVER['PHP_SELF'])==0)
-    {
-        //echo "Same page!";
-        //$_COOKIE[$ctr]++;
-        
-        //setcookie($seq,$_COOKIE[$seq] , time() + (86400 * 30), "/");
-    }   
-    elseif(strcmp($_COOKIE['path'],$_SERVER['PHP_SELF'])!=0)
-    {
-        //echo "redirected from another!";
-        //$_COOKIE[$seq]=substr($_COOKIE[$seq], 0, -1);
-        if($_COOKIE[$ctr]>0)
-        {
-            //$_COOKIE[$ctr]--;
-        }
-        //setcookie($ctr, $_COOKIE[$ctr], time() + (86400 * 30), "/");
-        
-    }
     
 
     $_COOKIE[$ctr]++;
     setcookie($ctr, $_COOKIE[$ctr], time() + (86400 * 30), "/");
     setcookie('path',$_SERVER['PHP_SELF'] , time() + (86400 * 30), "/");
-    echo $_COOKIE[$ctr]."<br>";
-    //$_COOKIE[$ctr]++;
     $_COOKIE[$seq]=$_COOKIE[$seq]."2";
     setcookie($seq,$_COOKIE[$seq] , time() + (86400 * 30), "/");
 
@@ -42,10 +22,8 @@ if(isset($_COOKIE['uname']))
     {
         
         setcookie('mode',"private", time() + (86400 * 30), "/");
-        echo $_COOKIE['mode']."<br>";
+        
     }
-    echo $_COOKIE[$seq];
-    //echo $_COOKIE['path'];
 }
 }
 
@@ -64,19 +42,19 @@ else
 }
 ?>
 
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-US" lang="en-US">
+
+<!DOCTYPE html>
+<html>
 <head>
-    <meta http-equiv='Content-Type' content='text/html; charset=utf-8'/>
-    <title>Add message</title>
-    <link rel="STYLESHEET" type="text/css" href="../../style/fg_membersite.css" />
-    <script type='text/javascript' src='../../scripts/gen_validatorv31.js'></script>
-    <link rel="STYLESHEET" type="text/css" href="../../style/pwdwidget.css" />
-    <script src="../../scripts/pwdwidget.js" type="text/javascript"></script>      
+<meta charset="UTF-8">
+<title>Home</title>
+<link rel="STYLESHEET" type="text/css" href="../../style/fg_membersite.css" />
+<script type='text/javascript' src='../../scripts/gen_validatorv31.js'></script>
+<link rel="STYLESHEET" type="text/css" href="../../style/pwdwidget.css" />
+<script src="../../scripts/pwdwidget.js" type="text/javascript"></script>      
 </head>
 <body>
 
-<!-- Form Code Start -->
 <div id='fg_membersite'>
 Welcome back <?= $fgmembersite->UserFullName(); ?>!
 <p><a href='../../user/logout/'>Logout</a></p>
@@ -112,12 +90,9 @@ Welcome back <?= $fgmembersite->UserFullName(); ?>!
 
 </fieldset>
 </form>
-<!-- client-side Form Validations:
-Uses the excellent form validation script from JavaScript-coder.com-->
+</div>
 
 <script type='text/javascript'>
-// <![CDATA[
-
     var frmvalidator  = new Validator("create-message");
     frmvalidator.EnableOnPageErrorDisplay();
     frmvalidator.EnableMsgsTogether();
@@ -125,19 +100,6 @@ Uses the excellent form validation script from JavaScript-coder.com-->
     frmvalidator.addValidation("title","req","Please provide a title");
     
     frmvalidator.addValidation("message","req","Please provide a message");
-   
-// ]]>
 </script>
-
-<!--
-Form Code End (see html-form-guide.com for more info.)
--->
-</div>
-
-<?
-	print_r($_COOKIE);
-?>
-
-
 </body>
 </html>

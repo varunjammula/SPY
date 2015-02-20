@@ -38,54 +38,34 @@ if(isset($_COOKIE['uname']))
     $knock_sequence=$_COOKIE['uname']."_ks";
     $ctr=$_COOKIE['uname']."_ctr";
     $seq=$_COOKIE['uname']."_seq";
-    if(strcmp($_COOKIE['path'],$_SERVER['PHP_SELF'])==0 && $_COOKIE[$ctr]==0)
-    {
-        echo "Just logged in !<br>";
-        //$_COOKIE[$ctr]++;
-    }
-    elseif(strcmp($_COOKIE['path'],$_SERVER['PHP_SELF'])!=0)
-    {
-        
-        //$_COOKIE[$seq]=substr($_COOKIE[$seq], 0, -1);
-        if($_COOKIE[$ctr]>0)
-        {
-            //$_COOKIE[$ctr]--;
-        }
-    }
-    echo strlen($_COOKIE[$seq])."<br>";
-
-   
-
-    echo "Counter value before is...".$_COOKIE[$ctr]."<br>";
-    echo "Sequence value before is...".$_COOKIE[$seq]."<br>";
+    
     $_COOKIE[$ctr]++;
     setcookie($ctr, $_COOKIE[$ctr], time() + (86400 * 30), "/");
     setcookie('path',$_SERVER['PHP_SELF'] , time() + (86400 * 30), "/");
-    echo $_COOKIE[$ctr]."<br>";
     $_COOKIE[$seq]=$_COOKIE[$seq]."1";
-    //$_COOKIE[$ctr]++;
     setcookie($seq,$_COOKIE[$seq] , time() + (86400 * 30), "/");
     if(strcmp(substr($_COOKIE[$seq],strlen($_COOKIE[$seq])-4),$_COOKIE[$knock_sequence])==0)
     {
         
         setcookie('mode',"private", time() + (86400 * 30), "/");
-        //echo $_COOKIE['mode']."<br>";
     }
-    echo $_COOKIE[$seq];
-    }
+    
+}
 }
 ?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-US" lang="en-US">
+
+<!DOCTYPE html>
+<html>
 <head>
-      <meta http-equiv='Content-Type' content='text/html; charset=utf-8'/>
-      <title>Login</title>
-      <link rel="STYLESHEET" type="text/css" href="../../style/fg_membersite.css" />
-      <script type='text/javascript' src='../../scripts/gen_validatorv31.js'></script>
+<meta charset="UTF-8">
+<title>Register</title>
+<link rel="STYLESHEET" type="text/css" href="../../style/fg_membersite.css" />
+<script type='text/javascript' src='../../scripts/gen_validatorv31.js'></script>
+<link rel="STYLESHEET" type="text/css" href="../../style/pwdwidget.css" />
+<script src="../../scripts/pwdwidget.js" type="text/javascript"></script>      
 </head>
 <body>
 
-<!-- Form Code Start -->
 <div id='fg_membersite'>
 <form id='login' action='<?php echo $fgmembersite->GetSelfScript(); ?>' method='post' accept-charset='UTF-8'>
 <fieldset >
@@ -113,12 +93,8 @@ if(isset($_COOKIE['uname']))
 <div class='short_explanation'><a href='reset-pwd-req.php'>Forgot Password?</a></div>
 </fieldset>
 </form>
-<!-- client-side Form Validations:
-Uses the excellent form validation script from JavaScript-coder.com-->
-
+</div>
 <script type='text/javascript'>
-// <![CDATA[
-
     var frmvalidator  = new Validator("login");
     frmvalidator.EnableOnPageErrorDisplay();
     frmvalidator.EnableMsgsTogether();
@@ -126,15 +102,7 @@ Uses the excellent form validation script from JavaScript-coder.com-->
     frmvalidator.addValidation("username","req","Please provide your username");
     
     frmvalidator.addValidation("password","req","Please provide the password");
-
-// ]]>
 </script>
-</div>
-<!--
-Form Code End (see html-form-guide.com for more info.)
--->
-<?
-  print_r($_COOKIE);
-?>
+
 </body>
 </html>
