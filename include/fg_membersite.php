@@ -137,9 +137,7 @@ class FGMembersite
                     $row["message"] = trim($row["message"]);
                     $row["message"] = stripslashes($row["message"]);
                     $row["message"] = htmlspecialchars($row["message"]);
-                    
-                    
-                    echo "<div class=\"message\">".$row["title"]." Message: ".$row["message"]."</div>";
+                    echo "<div class=\"message\">".$row["title"].$row["message"]."</div>";
                 }
          
         }

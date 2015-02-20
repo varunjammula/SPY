@@ -41,11 +41,9 @@ if(!$fgmembersite->CheckLogin())
 <script src="../../scripts/pwdwidget.js" type="text/javascript"></script>      
 </head>
 <body>
+<output name="list"></output>
 <div id='fg_membersite'>
-<?php
-$fgmembersite->ListDisplay();
-?>
-
+<?php $fgmembersite->ListDisplay();?>
 </div>
 </body>
 </html>

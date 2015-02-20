@@ -15,11 +15,6 @@ $fgmembersite->LogOut();
 </head>
 <body>
 
-<h2>You have logged out</h2>
-<p>
-<a href='../login/'>Login Again</a>
-</p>
-
 <?PHP
 unset($_SESSION["name_of_user"]);
 if (isset($_SERVER['HTTP_COOKIE'])) {

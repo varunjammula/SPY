@@ -72,15 +72,12 @@ else
 <div><span class='error'><?php echo $fgmembersite->GetErrorMessage(); ?></span></div>
 
 <div class='container'>
-    <label for='title' >Title*:</label><br>
-    <input type='text' name='title' id='title' value='<?php echo $fgmembersite->SafeDisplay('title') ?>' maxlength="50" /><br>
+    Title:<input type='text' name='title'  value='<?php echo $fgmembersite->SafeDisplay('title') ?>' maxlength="50" /><br>
      
 </div>
 
 <div class='container'>
-    <label for='message' >Message*:</label><br>
-    <textarea rows="4" cols="50" name='message' id='message'></textarea>
-     
+    Message:<textarea name='message' ></textarea>
 </div>
 
 <div class='container'>
