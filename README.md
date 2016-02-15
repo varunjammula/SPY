@@ -19,7 +19,7 @@ Here, all URLs are given relative to the root of your web application. Assume th
 Users will have usernames and passwords.
 
 /user/register
-Required Page Elements:
+###Required Page Elements:
 
 Form, name attribute of register Four inputs on the form:
 
@@ -27,19 +27,19 @@ name attribute of username, type of text
 name attribute of password, type of password
 name attribute of password_confirm, type of password
 name attribute of submit, type of submit
-Action after submit:
+###Action after submit:
 
 Create a user with the given username and password iff (if and only if): password matches password_confirm and username does not already exist.
 
 /user/login
-Required Page Elements:
+###Required Page Elements:
 
 Form, name attribute of login Three inputs on the form:
 
 name attribute of username, type of text
 name attribute of password, type of password
 name attribute of submit, type of submit
-Action after submit:
+###Action after submit:
 
 If the username and password are of a previously registered user, then the user is logged into the system. Once logged in, the knock sequence starts.
 
@@ -48,7 +48,7 @@ No Required Page Elements
 
 When the user accesses the /user/logout page (GET), then the user will be logged out of the web application. The knock sequence stops.
 
-Message Management
+##Message Management
 
 /message/add
 Requires logged-in user.
