@@ -1,6 +1,6 @@
 # Operation Knock-Knock
 
-##Description
+## Description
 
 Your mission, should you choose to accept it, is to write a web application on behalf of the super secret spy agency: CSE591.
 
@@ -10,16 +10,16 @@ The main functionality of your web application will have user registration, logi
 
 Each user will have a unique “knock sequence” (described later). Once the secret “knock sequence” of URLs is requested by a logged-in session, your application must switch into “secret” mode. Everything should remain the same, except now secret messages will be shown and posted.
 
-##URL Interface
+## URL Interface
 
 Here, all URLs are given relative to the root of your web application. Assume that your web application is running at http://example.com:8080, then the URL /user/register described below would be accessed to the web application at http://example.com:8080/user/register.
 
-##User Management
+## User Management
 
 Users will have usernames and passwords.
 
 /user/register
-###Required Page Elements:
+### Required Page Elements:
 
 Form, name attribute of register Four inputs on the form:
 
@@ -32,7 +32,7 @@ name attribute of submit, type of submit
 Create a user with the given username and password iff (if and only if): password matches password_confirm and username does not already exist.
 
 /user/login
-###Required Page Elements:
+### Required Page Elements:
 
 Form, name attribute of login Three inputs on the form:
 
@@ -48,7 +48,7 @@ No Required Page Elements
 
 When the user accesses the /user/logout page (GET), then the user will be logged out of the web application. The knock sequence stops.
 
-##Message Management
+## Message Management
 
 /message/add
 Requires logged-in user.
@@ -77,7 +77,7 @@ Each div must contain the text of the title of the message and the message conte
 
 Messages by all users are shown. If the user’s session is in “secret” mode, then only secret messages must be displayed (everything else on the page remains the same). If the user’s session is not in “secret” mode, then no secret messages should be displayed.
 
-##Knock Sequence Algorithm
+## Knock Sequence Algorithm
 
 Each user will have a different knock sequence, which is a function (in the mathematical sense) of their username.
 
@@ -136,7 +136,7 @@ Submit form on /user/login with username "ObMaX" and correct password
 /message/list
 There will be a message with text “Test” on this page, and no message with text “Secret Text”.
 
-##Knock Sequence Implementation
+## Knock Sequence Implementation
 
 A knock sequence will only work for a user who is logged in (otherwise how would you know how to calculate the knock sequence).
 
